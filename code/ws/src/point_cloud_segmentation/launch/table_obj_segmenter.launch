@@ -1,0 +1,50 @@
+<launch>
+  <arg name="kinect2" value="false" />
+
+  <node pkg="point_cloud_segmentation" name="Filter" type="tabletop_object_segmenter"
+  	output="screen" cwd="node">
+    <remap from="/camera/depth_registered/points" to="/kinect2/hd/points" if="$(arg kinect2)"/>
+    <remap from="/camera/depth_registered/sd_points" to="/kinect2/sd/points" if="$(arg kinect2)"/>
+
+    <remap from="sd_depth_img_topic" to="/kinect2/sd/image_depth_rect" if="$(arg kinect2)"/>
+    <remap from="sd_rgb_img_topic" to="/kinect2/sd/image_color_rect" if="$(arg kinect2)"/>
+
+    <remap from="depth_img_topic" to="/kinect2/hd/image_depth_rect" if="$(arg kinect2)"/>
+    <remap from="depth_img_topic" to="/camera/depth_registered/image_raw" unless="$(arg kinect2)" />
+    <remap from="rgb_img_topic" to="/kinect2/hd/image_color_rect" if="$(arg kinect2)"/>
+    <remap from="/cloud"       to="/camera/depth_registered/points" unless="$(arg kinect2)"/>
+
+
+    <param name ="RANSAC_Distance_Threshold" type="double" value= "0.015" />
+
+    <param name ="max_x" type = "double" value= "0.5" if="$(arg kinect2)"/>
+    <param name ="min_x" type = "double" value= "-0.5" if="$(arg kinect2)"/>
+    <param name ="max_y" type = "double" value= "-0.4" if="$(arg kinect2)"/>
+    <param name ="min_y" type = "double" value= "-1.05" if="$(arg kinect2)"/>
+    <param name ="max_z" type = "double" value= "1." if="$(arg kinect2)"/>
+    <param name ="min_z" type = "double" value= "0.5" if="$(arg kinect2)"/>
+
+    <param name ="voxel_downsample_res" type = "double" value= "0.005"/>
+    <param name ="cluster_tolerance" type = "double" value= "0.005"/>
+    <param name ="downsample_object_cloud" type = "bool" value= "true"/>
+    <param name ="num_normal_neighbors" type = "int" value= "9"/>
+
+    <param name ="filter_bias" type = "double" value= "-0.01" />
+    <param name ="color_sim_min" type = "double" value = ".5" />
+    <param name ="check_table_color" type="bool" value="false"/>
+    <param name ="keep_z_filter_organized" type="bool" value="false"/>
+    <param name ="create_srv" type="bool" value="false"/>
+    <param name ="debug" type="bool" value="true"/>
+
+    <param name ="debug_srv_output" type="bool" value="false"/>
+    <param name ="visualize_bounding_box" type="bool" value="false"/>
+    <param name ="visualize_clusters" type="bool" value="false"/>
+
+    <!-- set to true to always run segmentation instead of only on service calls -->
+    <param name ="segment_on_callback" type="bool" value= "true" />
+
+    <!-- if transform_cloud is set to true, it transforms it into the specified frame prior to processing -->
+    <param name="transform_cloud" value="true" type="bool" />
+    <param name="workspace_frame" value="world" type="string"/>
+  </node>
+</launch>

@@ -1,0 +1,72 @@
+<launch>
+    <arg name="simulation" value="false"/>
+    <arg name="grasps_num_per_object" value="2"/>
+    <arg name="record_data_path" value="/dataspace/data_kai/al_grasp_queries/"/>
+    <!--arg name="record_data_path" value="/dataspace/data_kai/multi_finger_exp_data/"/-->
+    <!--arg name="record_data_path" value="/mnt/tars_data/multi_finger_exp_data/"/-->
+    <arg name="camera_information_topic" value="/kinect2/hd/camera_info"/>
+    <arg name="use_hd_arg" value="true"/>
+    <arg name="smooth_plan_traj_arg" value="true"/>
+    <arg name="bag_tactile_data" value="true"/>
+    <arg name="bag_visual_data" value="true"/>
+
+    <!--node name="broadcast_calib_tf_node" pkg="robot_camera_calibration" type="broadcast_calib_tf.py" output="screen" /-->
+    <include file="$(find robot_aruco_calibration)/launch/publish_calibration_tf.launch"/>
+    <include file="$(find point_cloud_segmentation)/launch/table_obj_segmenter.launch"/>
+
+    <node name="manage_moveit_scene_node" pkg="grasp_pipeline" 
+        type="manage_moveit_scene_server.py" output="screen">
+      <param name="use_sim" value="true" type="bool" if="$(arg simulation)"/>
+      <param name="use_sim" value="false" type="bool" unless="$(arg simulation)"/>
+      <param name="shrink_obj_bb_dist" value="0.01" type="double"/>
+    </node>
+
+    <node name="gen_grasp_preshape_server_node" pkg="grasp_pipeline" 
+        type="gen_grasp_preshape_server.py" output="screen">
+      <param name="use_sim" value="false" type="bool" unless="$(arg simulation)"/>
+      <!--param name="hand_sample_dist_top" value="0.02" type="double"/>
+      <param name="hand_sample_dist_side" value="0.03" type="double"/>
+      <param name="hand_sample_dist_var" value="0.001" type="double"/-->
+      <!--param name="hand_sample_dist_top" value="0.05" type="double"/>
+      <param name="hand_sample_dist_side" value="0.05" type="double"/>
+      <param name="hand_sample_dist_var" value="0.01" type="double"/-->
+      <param name="hand_sample_dist_top" value="0.05" type="double"/>
+      <!--param name="hand_sample_dist_side" value="0.05" type="double"/>
+      <param name="hand_sample_dist_var" value="0.01" type="double"/-->
+      <param name="hand_sample_dist_side" value="0.06" type="double"/>
+      <param name="hand_sample_dist_var" value="0.02" type="double"/>
+      <!--<param name="hand_roll_angle_sample_var" value="0.001" type="double"/>-->
+      <!--<param name="hand_roll_angle_sample_var" value="0.01" type="double"/>-->
+      <param name="hand_roll_angle_sample_var" value="0.005" type="double"/>
+      <!--<param name="min_object_top_dist_to_table" value="0.03" type="double"/>-->
+      <param name="min_object_top_dist_to_table" value="0.01" type="double"/>
+    </node>
+
+    <node name="control_allegro_to_config_server_node" pkg="grasp_pipeline" 
+        type="control_allegro_to_config_server.py" output="screen" />
+    <node name="arm_moveit_planner_server_node" pkg="grasp_pipeline"
+        type="arm_moveit_planner_server.py" output="screen" />
+    <!--node name="grasp_control_server_node" pkg="grasp_control" type="grasp_control_server.py" output="screen" /-->
+
+    <node name="record_grasp_data_node" pkg="grasp_pipeline" type="record_grasp_data_server.py" output="screen" >
+      <param name="num_grasps_per_object" value="$(arg grasps_num_per_object)" type="int"/>
+      <param name="data_recording_path" value="$(arg record_data_path)" type="string"/>
+      <param name="camera_info_topic" value="$(arg camera_information_topic)" type="string"/>
+      <param name="use_hd" value="$(arg use_hd_arg)" type="bool"/>
+    </node>
+
+    <node name="save_visual_data_node" pkg="grasp_pipeline" type="save_visual_data" output="screen" />
+    <node name="trajectory_smoothing" pkg="trajectory_smoothing" type="service" 
+        output="screen" if="$(arg smooth_plan_traj_arg)"/>
+    <node name="task_velocity_planner_node" pkg="grasp_pipeline" 
+        type="task_velocity_control_server.py" output="screen"/>
+    <node name="bag_tactile_data_node" pkg="grasp_pipeline" type="bag_tactile_data_server.py" 
+        output="screen" if="$(arg bag_tactile_data)">
+      <param name="data_recording_path" value="$(arg record_data_path)" type="string"/>
+    </node>
+    <node name="bag_visual_data_node" pkg="grasp_pipeline" type="bag_visual_data_server.py" 
+        output="screen" if="$(arg bag_visual_data)">
+      <param name="data_recording_path" value="$(arg record_data_path)" type="string"/>
+    </node>
+
+</launch>

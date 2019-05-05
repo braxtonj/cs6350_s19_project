@@ -1,0 +1,10 @@
+float64 a
+float64 b
+float64 c
+geometry_msgs/Pose pose
+
+sensor_msgs/Image rgb_img
+sensor_msgs/CameraInfo camera_info
+sensor_msgs/PointCloud2 raw_cloud
+---
+sensor_msgs/Image ellipsoid_rgb_img

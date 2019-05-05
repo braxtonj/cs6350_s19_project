@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ll4ma_robots_description
+    relative_path: robots/lbr4.robot.xacro
+    xacro_args: "end_effector:=allegro robot_table:=true --inorder "
+  SRDF:
+    relative_path: config/lbr4.srdf
+  CONFIG:
+    author_name: Qingkai Lu
+    author_email: luqingkai@gmail.com
+    generated_timestamp: 1540501953

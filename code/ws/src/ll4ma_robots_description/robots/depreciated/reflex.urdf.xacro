@@ -1,0 +1,273 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="reflex_hand" >
+
+  <xacro:property name="flex_length" value="0.016" />
+  <xacro:property name="num_steps" value="9" />
+  <xacro:property name="prox_length" value="0.060" />
+  <xacro:property name="pi" value="3.1415" />
+
+  <!-- flex segments connecting proximal finger component to distal -->
+  <xacro:macro name="flex_link" params="finger_id flex_id">
+    <link name="finger[${finger_id}]/flex_link[${flex_id}]">
+      <visual>
+        <origin
+            xyz="0.001 -0.007 0.003"
+            rpy="${pi/2} 0 ${pi/2}" />
+        <geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/flex_block.STL" />
+        </geometry>
+      </visual>
+      <inertial>
+	<origin
+	    xyz="0.001 -0.007 0.003"
+            rpy="${pi/2} 0 ${pi/2}" />
+	<mass value="1.0"/>
+	<inertia
+	    ixx="1.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyy="1.0"
+	    iyz="0.0"
+	    izz="1.0" />
+      </inertial>
+      <collision>
+	<origin
+	    xyz="0.001 -0.007 0.003"
+            rpy="${pi/2} 0 ${pi/2}" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/flex_block.STL" />
+	</geometry>
+      </collision>
+    </link>
+    <gazebo reference="finger[${finger_id}]/flex_link[${flex_id}]">
+      <material>Gazebo/Gold</material>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:macro name="flex_joint" params="finger_id link_parent link_child">
+    <joint
+	name="finger[${finger_id}]/flex_joint_from_${link_parent}_to_${link_child}"
+	type="continuous">
+      <parent link="finger[${finger_id}]/flex_link[${link_parent}]"/>
+      <child link="finger[${finger_id}]/flex_link[${link_child}]"/>
+      <origin xyz="${flex_length/num_steps} 0 0" />
+      <axis xyz="0 -1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="flex_to_segment_joint" params="finger_id">
+    <joint
+	name="finger[${finger_id}]/flex_joint_from_prox_to_1"
+	type="continuous">
+      <parent link="proximal_${finger_id}"/>
+      <child link="finger[${finger_id}]/flex_link[1]"/>
+      <origin xyz="${prox_length} 0 -0.004"/>
+      <axis xyz="0 -1 0"/>
+    </joint>
+    <joint
+	name="finger[${finger_id}]/flex_joint_from_${num_steps}_to_dist"
+	type="continuous">
+      <parent link="finger[${finger_id}]/flex_link[${num_steps}]"/>
+      <child link="distal_${finger_id}"/>
+      <origin xyz="${flex_length/num_steps-0.01} 0 0.008"/>
+      <axis xyz="0 -1 0"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- finger components -->
+  <xacro:macro name="proximal_link" params="finger_id">
+    <link name="proximal_${finger_id}">
+      <visual>
+	<origin
+	    xyz="-0.011 0.007 0.011"
+            rpy="3.1459 0 0"/>
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal.STL" />
+	</geometry>
+      </visual>
+      <inertial>
+	<origin
+	    xyz="-0.011 0.007 0.011"
+            rpy="3.1459 0 0"/>
+	<mass value="1.0"/>
+	<inertia
+	    ixx="1.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyy="1.0"
+	    iyz="0.0"
+	    izz="1.0" />
+      </inertial>
+      <collision>
+	<origin
+	    xyz="-0.011 0.007 0.011"
+            rpy="3.1459 0 0"/>
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="distal_link" params="finger_id">
+    <link name="distal_${finger_id}">
+      <visual>
+	<origin
+            xyz="-0.077 0.007 0.007"
+            rpy="3.1459 0 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal.STL" />
+	</geometry>
+      </visual>
+      <inertial>
+	<origin
+	    xyz="-0.077 0.007 0.007"
+            rpy="3.1459 0 0" />
+	<mass value="1.0"/>
+	<inertia
+	    ixx="1.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyy="1.0"
+	    iyz="0.0"
+	    izz="1.0" />
+      </inertial>
+      <collision>
+	<origin
+	    xyz="-0.077 0.007 0.007"
+            rpy="3.1459 0 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="proximal_pad" params="finger_id">
+    <link name="proximal_pad_${finger_id}">
+      <visual>
+	<origin
+	    xyz="-0.008 0.014 -0.002"
+            rpy="1.5708 1.5708 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal_pad.STL" />
+	</geometry>
+      </visual>
+      <inertial>
+	<origin
+	    xyz="-0.008 0.014 -0.002"
+            rpy="1.5708 1.5708 0" />
+	<mass value="1.0"/>
+	<inertia
+	    ixx="1.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyy="1.0"
+	    iyz="0.0"
+	    izz="1.0" />
+      </inertial>
+      <collision>
+	<origin
+	    xyz="-0.008 0.014 -0.002"
+            rpy="1.5708 1.5708 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal_pad.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="distal_pad" params="finger_id">
+    <link name="distal_pad_${finger_id}">
+      <visual>
+	<origin
+            xyz="-0.00825 0.009 0.057"
+            rpy="1.5708 1.5708 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal_pad.STL" />
+	</geometry>
+      </visual>
+      <inertial>
+	<origin
+	    xyz="-0.00825 0.009 0.057"
+            rpy="1.5708 1.5708 0" />
+	<mass value="1.0"/>
+	<inertia
+	    ixx="1.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyy="1.0"
+	    iyz="0.0"
+	    izz="1.0" />
+      </inertial>
+      <collision>
+	<origin
+	    xyz="-0.00825 0.009 0.057"
+            rpy="1.5708 1.5708 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal_pad.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="distal_pad_joint" params="finger_id">
+    <joint name="dist${finger_id}_pad_joint" type="fixed">
+      <origin
+	  xyz="-0.01 0 0.001"
+	  rpy="1.5707963267949 0 -1.5707963267949" />
+      <parent link="distal_${finger_id}" />
+      <child link="distal_pad_${finger_id}" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="proximal_pad_joint" params="finger_id">
+    <joint name="prox${finger_id}_pad_joint" type="fixed">
+      <origin
+	  xyz="0 0 0"
+	  rpy="1.5707963267949 0 -1.5707963267949" />
+      <parent link="proximal_${finger_id}" />
+      <child link="proximal_pad_${finger_id}" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+  
+  <xacro:macro name="swivel_link" params="finger_id">
+    <link name="swivel_${finger_id}">
+      <visual>
+	<origin
+            xyz="0 0 0"
+            rpy="0 0 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/swivel_${finger_id}.STL" />
+	</geometry>
+      </visual>
+      <inertial>
+	<origin
+	    xyz="0 0 0"
+	    rpy="0 0 0" />
+	<mass value="1.0"/>
+	<inertia
+	    ixx="1.0"
+	    ixy="0.0"
+	    ixz="0.0"
+	    iyy="1.0"
+	    iyz="0.0"
+	    izz="1.0" />
+      </inertial>
+      <collision>
+	<origin
+	    xyz="0 0 0"
+	    rpy="0 0 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/swivel_${finger_id}.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+  
+    
+  <xacro:include filename="$(find ll4ma_robots_description)/urdf/reflex/reflex.urdf" />
+    
+</robot>

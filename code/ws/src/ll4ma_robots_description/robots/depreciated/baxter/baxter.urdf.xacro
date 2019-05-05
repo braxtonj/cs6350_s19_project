@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<robot name="baxter" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <xacro:arg name="gazebo" default="true"/>
+  <xacro:arg name="right_ee" default="baxter_gripper" />
+  <xacro:arg name="left_ee" default="baxter_gripper" />
+  <!-- baxter-specific parameters -->
+  <xacro:arg name="finger_type" default="extended_narrow" />
+  <xacro:arg name="tip_type" default="soft" />
+  <xacro:arg name="finger_slot" default="2" />
+  <xacro:arg name="finger_grasp" default="inner" />
+  
+  <xacro:property name="pi" value="3.1415926535897931" scope="global" />
+  
+  <!-- <!-\- baxter robot -\-> -->
+  <!-- <xacro:include filename="$(find ll4ma_robots_description)/robots/baxter/baxter_robot.urdf.xacro"> -->
+  <!--   <xacro:arg name="gazebo" value="$(arg gazebo)"/> -->
+  <!-- </xacro:include> -->
+
+  <xacro:include filename="$(find ll4ma_robots_description)/robots/baxter/finger.xacro" />
+
+  <!-- test -->
+  <xacro:finger
+        gripper_side="left"
+        finger_side="l"
+        finger_type="$(arg finger_type)"
+        tip_type="$(arg tip_type)"
+        reflect="1" />
+
+
+  
+  <!-- left end effector -->
+  <!-- <xacro:if value="${$(arg left_ee) == 'baxter_gripper'}"> -->
+  <!-- <xacro:include filename="$(find ll4ma_robots_description)/robots/baxter/gripper.xacro" /> -->
+  <!-- <xacro:gripper -->
+  <!--     side="left" -->
+  <!--     finger_type="$(arg finger_type)" -->
+  <!--     tip_type="$(arg tip_type)" -->
+  <!--     finger_slot="$(arg finger_slot)" -->
+  <!--     finger_grasp="$(arg finger_grasp)" /> -->
+  <!-- </xacro:if> -->
+
+  <!-- right end effector -->
+  <!--
+  <xacro:if value="${right_ee} == 'baxter_gripper'">
+    <xacro:include filename="$(find ll4ma_robots_description)/robots/baxter/gripper.xacro" />
+    <xacro:gripper
+	side="right"
+	finger_type="${finger_type}"
+	tip_type="${tip_type}"
+	finger_slot="${finger_slot}"
+	finger_grasp="${finger_grasp}" />	
+  </xacro:if>
+  -->
+  
+</robot>

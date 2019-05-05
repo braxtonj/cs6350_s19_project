@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="reflex_preshape_transmission" params="id">
+    <transmission name="preshape_${id}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="preshape_${id}">
+	<hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="preshape_${id}_motor">
+	<hardwareInterface>EffortJointInterface</hardwareInterface>
+	<mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <xacro:macro name="reflex_proximal_joint_transmission" params="id">
+    <transmission name="proximal_joint_${id}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="proximal_joint_${id}">
+	<hardwareInterface>EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="proximal_joint_${id}_motor">
+	<hardwareInterface>EffortJointInterface</hardwareInterface>
+	<mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <reflex_preshape_transmission id="1"/>
+  <reflex_preshape_transmission id="2"/>
+  <reflex_proximal_joint_transmission id="1"/>
+  <reflex_proximal_joint_transmission id="2"/>
+  <reflex_proximal_joint_transmission id="3"/>
+  
+</robot>

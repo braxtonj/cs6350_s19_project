@@ -1,0 +1,80 @@
+<launch>
+  <!-- Global Args -->
+  <arg name="kinect2" value="false" /> <!-- Asumes Asus if not kinect2 -->
+  <arg name="find_table_plane_once" value="true" />
+  <arg name="Use_Topics" value="true" />
+  <arg name="debug" value="false" />
+  <arg name="Turn_On_Splitter" value="true" />
+  <arg name="Send_Table" value="true" />
+  <arg name="Send_Background" value="true" />
+  <arg name="Send_Raw_Data" value="true" />
+  <arg name="Start_Rviz" value="false" />
+
+
+  <!-- Multi-Object Only Args -->
+  <arg name="Send_Motion_Cloud" value="true" />
+
+  <!-- Single Object Only Args -->
+
+  <!-- Unsupported Args - Future Goals --> 
+  <arg name="Send_Object_Mask" value="false" />
+  <arg name="Send_Object_Bounding_Box" value="false" /> <!-- Single Only -->
+  <arg name="keep_organized" value="false" />
+  <arg name="Use_Srvs" value="false" />
+  <arg name="Send_Images" value="false" />
+
+
+  <param name="Multi_Object_Segmentation" type = "bool" value = "true" />
+
+
+  <node pkg="point_cloud_segmentation" name="Filter" type="table_top_segmentation_node"
+  	 cwd="node">
+
+    <!-- Kinect2 Stuff -->
+    <remap from="/cloud" to="/kinect2/hd/points" if="$(arg kinect2)"/>
+    <!-- Asus Stuff -->
+    <remap from="/cloud"       to="/camera/depth_registered/points" unless="$(arg kinect2)"/>
+    <remap from="/color_image" to="/camera/rgb/image_rect_color"    unless="$(arg kinect2)"    />
+    <remap from="/depth_image" to="/camera/depth_registered/image_raw" unless="$(arg kinect2)" />
+    <remap from="/camera_info" to="/camera/depth_registered/camera_info" unless="$(arg kinect2)"/>
+	
+    <param name = "Send_Motion_Cloud"         type = "bool"   value = "$(arg Send_Motion_Cloud)" />
+    <!--param name = "Send_Object_Masks"         type = "bool"   value = "$(arg Send_Object_Masks)" /-->
+    <param name = "Send_Object_Bounding_Box"  type = "bool"   value = "$(arg Send_Object_Bounding_Box)" />
+    <param name = "keep_organized"           type = "bool"   value = "$(arg keep_organized)" />
+    <param name = "find_table_plane_once"    type = "bool"   value = "$(arg find_table_plane_once)" />
+    <param name = "Send_Table"               type = "bool"   value = "$(arg Send_Table)" />
+    <param name = "Send_Background"          type = "bool"   value = "$(arg Send_Background)" />
+    <param name = "Use_Srvs"                 type = "bool"   value = "$(arg Use_Srvs)" />
+    <param name = "Use_Topics"               type = "bool"   value = "$(arg Use_Topics)" />
+    <!--param name = "Send_Color_Images"         type = "bool"   value = "$(arg Send_Color_Images)" /-->
+    <param name = "Send_Raw_Data"            type = "bool"   value = "$(arg Send_Raw_Data)" />
+    <param name = "Loop_Rate"                 type = "double" value = "1000.0"  />
+    <param name = "debug"                     type = "bool"   value = "$(arg debug)"  />
+    <param name = "depth_scale"               type = "double" value = "1.0"   />
+
+    <!-- TableTop Filtering -->
+    <param name = "max_z"                     type = "double" value = "1.75"/> 
+    <param name = "min_z"                     type = "double" value = "0.0"   />
+    <param name = "filter_bias"               type = "double" value = "-.015" />
+
+    <!-- Ransac Dominate Plane -->
+    <param name = "ransac_max_iterations"     type = "int"    value = "10000"   />
+    <param name = "RANSAC_Distance_Threshold" type = "double" value =  ".015" />
+
+    <!-- Cloud Subtraction -->
+    <param name = "Max_Point_Distance"        type = "double" value = ".01"  />
+    <param name = "Max_Color_Distance"             type = "double" value = "30.0"  />
+    <param name = "Morph_Size"                     type = "int"    value = "3"  />
+    <param name = "Minimum_Number_Points_4_Motion" type = "int" value = "1200"  />
+  </node>
+
+  <group if="$(arg Turn_On_Splitter)">
+    <node pkg="point_cloud_segmentation" name="Splitter" type="multi_topic_splitter"/>
+  </group>
+
+  <group if="$(arg Start_Rviz)">
+    <node pkg="rviz" type="rviz" name="rviz"/>
+  </group>
+  
+</launch>

@@ -1,0 +1,4 @@
+- git:
+    local-name: rtt_ros_kdl_tools
+    uri: git@bitbucket.org:robot-learning/rtt_ros_kdl_tools.git
+    version: master

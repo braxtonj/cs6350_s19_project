@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- ================================================================================= -->
+  <!-- ARGUMENT OPTIONS                                                                  -->
+  <!-- ~~~~~~~~~~~~~~~~                                                                  -->
+  <!-- end_effector: End-effector to include [None, allegro, reflex, push_stick]         -->
+  <!-- arm_name: Name of the arm, used for namespacing                                   -->
+  <!-- hand_name: Name of the hand, used for namespacing                                 -->
+  <!-- controller: Type of controller to use [None, joint_pd]                            -->
+  <!-- control_rate: Frequency at which robot control commands are published             -->
+  <!-- state_rate: Publishing frequency of the robot state publisher                     -->
+  <!-- world_launch_file: Name of Gazebo launch file for creating world                  -->
+  <!--                                                                                   -->
+  <!-- gui: Set true to use Gazebo GUI (false for headless simulation)                   -->
+  <!-- ft_sensor: Set true to include force/torque sensor                                -->
+  <!-- gazebo_tf: Set true to start Gazebo TF node                                       -->
+  <!-- robot_table: Set true to include the robot table model                            -->
+  <!-- robot_state_publisher: Set true to include robot state publisher                  -->
+  <!--                                                                                   -->
+  <!-- jnt_state_topic: Topic name for publishing current joint states                   -->
+  <!-- jnt_des_topic: Topic name for publishing desired joint states                     -->
+  <!-- task_des_topic: Topic name for publishing desired task space states               -->
+  <!-- jnt_cmd_topic: Topic name for publishing low-level joint commands (torques)       -->
+  <!-- robot_state_topic: Topic for publishing the full robot state                      -->
+  <!-- ================================================================================= -->
+  <arg name="end_effector"          default="None"/>
+  <arg name="arm_name"              default="lbr4"/>
+  <arg name="hand_name"             default="allegro_hand_right"/>
+  <arg name="controller"            default="joint_pd"/>
+  <arg name="control_rate"          default="100"/>
+  <arg name="state_rate"            default="1000"/>
+  <arg name="world_launch_file"     default="empty_world_dart.launch"/>
+
+  <arg name="gui"                   default="true"/>
+  <arg name="ft_sensor"             default="false"/>
+  <arg name="gazebo_tf"             default="false"/>
+  <arg name="robot_table"           default="true"/>
+  <arg name="robot_state_publisher" default="true"/>
+  
+  <arg name="jnt_state_topic"       default="joint_states"/>
+  <arg name="jnt_des_topic"         default="joint_cmd"/>
+  <arg name="task_des_topic"        default="task_cmd"/>
+  <arg name="jnt_cmd_topic"         default="joint_torque_cmd"/>
+  <arg name="robot_state_topic"     default="robot_state"/>
+  <!-- ================================================================================= --> 
+  <!-- Set robot name based on end-effector (different based on actuated/non-actuated EE) -->
+  <arg name="robot_name" if="$(eval end_effector in ['allegro', 'reflex'])"
+       value="$(arg arm_name)_$(arg end_effector)"/>
+  <arg name="robot_name" unless="$(eval end_effector in ['allegro', 'reflex'])"
+       value="$(arg arm_name)"/>
+ <!-- ================================================================================== -->
+
+ 
+  <!-- Launch an empty world with DART physics engine -->
+  <include file="$(find ll4ma_robots_gazebo)/launch/$(arg world_launch_file)">
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  
+  <!-- Load parameters to ROS parameter server -->
+  <param name="robot_description" command="
+         $(find xacro)/xacro '$(find ll4ma_robots_description)/robots/lbr4.robot.xacro'
+	 end_effector:=$(arg end_effector)
+         ft_sensor:=$(arg ft_sensor)
+         gazebo:=true
+	 robot_table:=$(arg robot_table)
+         --inorder"/>
+  <param name="robot_name" type="str" value="$(arg robot_name)"/>
+  <param name="hand_name"  type="str" value="$(arg hand_name)"
+	 if="$(eval end_effector == 'allegro')"/>
+  <param name="cmd_rate"   type="int" value="$(arg control_rate)"/>
+  
+  
+  <!-- Spawn the robot model -->
+  <node name="spawn_lbr4" pkg="gazebo_ros" type="spawn_model"
+        args="-urdf -param robot_description -model $(arg robot_name)
+  	      -robot_namespace $(arg robot_name)"
+        respawn="false" output="screen" />
+
+  
+  <!-- Publish joint states to TF transforms for rViz -->
+  <group if="$(arg robot_state_publisher)">
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+          respawn="false" output="screen">
+      <param name="publish_frequency" value="$(arg state_rate)"/>
+      <remap from="/joint_states" to="/$(arg robot_name)/joint_states" />
+    </node>
+  </group>
+  
+  
+  <!-- Launch Gazebo TF node-->
+  <group if="$(arg gazebo_tf)">
+    <node name="gazebo_tf" pkg="gazebo2rviz" type="gazebo2tf_node.py" output="screen"
+	  args="$(arg robot_name)"/>
+  </group>
+
+  
+  <!-- Controllers -->
+  <group if="$(eval controller != 'None')">
+    <!-- Arm controller -->
+    <include file="$(find ll4ma_robots_gazebo)/launch/lbr4_control.launch">
+      <arg name="arm_name"          value="$(arg arm_name)"/>
+      <arg name="end_effector"      value="$(arg end_effector)"/>
+      <arg name="controller"        value="$(arg controller)"/>
+      <arg name="control_rate"      value="$(arg control_rate)"/>
+      <arg name="jnt_state_topic"   value="/$(arg arm_name)/$(arg jnt_state_topic)"/>
+      <arg name="jnt_des_topic"     value="/$(arg arm_name)/$(arg jnt_des_topic)"/>
+      <arg name="task_des_topic"    value="/$(arg arm_name)/$(arg task_des_topic)"/>
+      <arg name="jnt_cmd_topic"     value="/$(arg arm_name)/$(arg jnt_cmd_topic)"/>
+      <arg name="robot_state_topic" value="/$(arg arm_name)/$(arg robot_state_topic)"/>
+    </include>
+    <!-- End-effector controller -->
+    <group if="$(eval end_effector == 'allegro')">
+      <include file="$(find ll4ma_robots_gazebo)/launch/allegro_control.launch">
+	<arg name="robot_name"      value="$(arg robot_name)"/>
+	<arg name="hand_name"       value="$(arg hand_name)"/>
+	<arg name="controller"      value="$(arg controller)"/>
+	<arg name="control_rate"    value="$(arg control_rate)"/>
+	<arg name="jnt_state_topic" value="/$(arg hand_name)/$(arg jnt_state_topic)"/>
+	<arg name="jnt_des_topic"   value="/$(arg hand_name)/$(arg jnt_des_topic)"/>
+	<arg name="jnt_cmd_topic"   value="/$(arg hand_name)/$(arg jnt_cmd_topic)"/>
+      </include>
+      <!-- Relay arm and hand joint states to respective topics from combined arm+hand joint states -->
+      <node name="joint_state_splitter" pkg="ll4ma_robots_gazebo" type="joint_state_splitter"
+	    respawn="false" output="screen">
+	<param name="listen_prefix" value="$(arg robot_name)"/> <!-- Split these joint states -->
+	<param name="hand_prefix"   value="$(arg hand_name)"/>  <!-- Relay hand joint states -->
+	<param name="arm_string"    value="$(arg arm_name)"/>   <!-- Relay arm joint states -->
+      </node>
+    </group>
+    <group if="$(eval end_effector == 'reflex')">
+      <!-- TODO reflex control is not stable right now, test on another branch to enable -->
+      
+      <!-- <include file="$(find ll4ma_robots_gazebo)/launch/reflex_control.launch"> -->
+      <!-- 	<arg name="robot_name"      value="$(arg robot_name)"/> -->
+      <!-- 	<arg name="hand_name"       value="$(arg hand_name)"/> -->
+      <!-- 	<arg name="controller"      value="$(arg controller)"/> -->
+      <!-- 	<arg name="control_rate"    value="$(arg control_rate)"/> -->
+      <!-- 	<arg name="jnt_state_topic" value="/$(arg hand_name)/$(arg jnt_state_topic)"/> -->
+      <!-- 	<arg name="jnt_des_topic"   value="/$(arg hand_name)/$(arg jnt_des_topic)"/> -->
+      <!-- 	<arg name="jnt_cmd_topic"   value="/$(arg hand_name)/$(arg jnt_cmd_topic)"/> -->
+      <!-- </include> -->
+      <!-- Relay arm and hand joint states to respective topics from combined arm+hand joint states -->
+      <node name="joint_state_splitter" pkg="ll4ma_robots_gazebo" type="joint_state_splitter"
+	    respawn="false" output="screen">
+	<param name="listen_prefix" value="$(arg robot_name)"/> <!-- Split these joint states -->
+	<param name="hand_prefix"   value="$(arg hand_name)"/>  <!-- Relay hand joint states -->
+	<param name="arm_string"    value="$(arg arm_name)"/>   <!-- Relay arm joint states -->
+      </node>
+    </group>
+
+    <!-- Joint state publisher -->
+    <node pkg="joint_state_publisher" type="joint_state_publisher" output="screen"
+          name="joint_state_publisher">
+      <rosparam param="source_list" if="$(eval end_effector == 'allegro')">
+        ["/lbr4/joint_states","/allegro_hand_right/joint_states"]
+      </rosparam>
+    </node>
+    
+  </group> <!-- END controllers group -->
+
+</launch>

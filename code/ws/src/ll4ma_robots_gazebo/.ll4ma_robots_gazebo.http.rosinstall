@@ -1,0 +1,24 @@
+- git:
+    uri: https://bitbucket.org/robot-learning/ll4ma_robots_description.git
+    local-name: ll4ma_robots_description
+    version: master
+    
+- git:
+    uri: https://bitbucket.org/robot-learning/ll4ma_robot_control.git
+    local-name: ll4ma_robot_control
+    version: master
+    
+- git:
+    uri: https://bitbucket.org/robot-learning/ll4ma_robot_interface.git
+    local-name: ll4ma_robot_interface
+    version: master
+
+- git:
+    uri: https://bitbucket.org/robot-learning/ll4ma_kdl.git
+    local-name: ll4ma_kdl
+    version: master
+
+- git:
+    uri: https://bitbucket.org/robot-learning/ll4ma_msgs.git
+    local-name: ll4ma_msgs
+    version: master

@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller" xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" xmlns:xacro="http://www.ros.org/wiki/xacro" name="lbr4">
+
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+
+    <!-- lbr-->
+    <xacro:include filename="$(find ll4ma_robots_description)/urdf/lbr4/lbr4.urdf.xacro" />
+    <!--Allegro-->
+    <xacro:include filename="$(find ll4ma_robots_description)/urdf/allegro_right/allegro_hand_description_right.urdf" />
+
+
+    <joint name="lbr4_allegro" type="fixed">
+        <parent link="lbr4_mount" />
+        <child link="allegro_mount" />
+        <origin xyz="-0.0425 0 -0.0425" rpy="0 1.57 0" />
+    </joint>
+
+    <!-- materials for visualization -->
+    <xacro:include filename="$(find ll4ma_robots_description)/urdf/lbr4/materials.urdf.xacro" />
+
+
+    <!-- world + base link-->
+    <link name="world" />
+    <link name="base_link" />
+    <joint name="base_joint" type="fixed">
+        <origin xyz="0 0 0" rpy="0 0 ${2*M_PI/3}" />
+        <parent link="world" />
+        <child link="base_link" />
+    </joint>
+
+    <!--lbr4-->
+    <xacro:lbr4 name="lbr4" parent="base_link">
+        <!-- Position from origin -->
+        <origin xyz="0 0 0.0" rpy="0 0 0" />
+    </xacro:lbr4>
+
+</robot>

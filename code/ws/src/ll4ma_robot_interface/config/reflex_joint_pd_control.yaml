@@ -1,0 +1,35 @@
+reflex:
+
+  root_links:
+    - lbr4_base_link
+    - lbr4_base_link
+    - lbr4_base_link
+    - lbr4_base_link
+
+  tip_links:
+    - pad
+    - distal_1
+    - distal_2
+    - distal_3
+
+  p_gains:
+    - 0.03
+    - 0.03
+    - 0.03
+    - 0.03
+    - 0.03
+
+  d_gains:
+    - 0.002
+    - 0.002
+    - 0.002
+    - 0.002
+    - 0.002
+
+  torque_limits:
+    # these are artificially high values for sim, can change to be realistic if you want
+    - 100.0
+    - 100.0
+    - 100.0
+    - 100.0
+    - 100.0

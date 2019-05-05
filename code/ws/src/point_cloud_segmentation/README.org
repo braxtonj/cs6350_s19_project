@@ -1,0 +1,17 @@
+#+Title:Table-top Object Segmentation 
+#+Author:LL4MA Lab
+This package uses pcl(pointcloud) library functions to perform table and object segmentation.
+
+* How does it work?
+The segmentation uses the following functions from pcl library:
+
+Read through pcl documentation to better understand the segmentation method and also to get an intution for tuning the parameters.
+
+* How do you use it?
+** Parameters(You need to tune them!)
+
+** Table segmentation
+If you want to get a pointcloud of the table and objects on the table.
+
+** Object segmentation
+If you want to get a pointcloud of the largest object on the table.

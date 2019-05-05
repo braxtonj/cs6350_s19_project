@@ -1,0 +1,446 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rhr_flex_model">
+
+  <xacro:if value="$(arg actuate_reflex)">
+    <xacro:property name="joint_type" value="revolute"/>
+  </xacro:if>
+  <xacro:unless value="$(arg actuate_reflex)">
+    <xacro:property name="joint_type" value="fixed"/>
+  </xacro:unless>
+  
+  <xacro:property name="flex_length" value="0.016" />
+  <xacro:property name="num_steps"   value="9" />
+  <xacro:property name="prox_length" value="0.060" />
+  <xacro:property name="pi"          value="3.14159265359" />
+  
+  <xacro:include filename="$(find ll4ma_robots_description)/urdf/xacro_macros/inertia_tensors.xacro"/>
+
+  <!-- ======================================= Masses ======================================== -->
+  <!-- These are rough approximations, the total hand mass was measured to be about 0.9kg,     -->
+  <!-- most of it concentrated in the shell anyways, so for sake of arm controller, most mass  -->
+  <!-- is being given to shell/pad, treating fingers as almost massless, so that KDL chain for -->
+  <!-- arm can just go through the palm pad and be accounting for most of the hand mass.       -->
+
+  <xacro:property name="flex_link_mass"     value="0.01"/>
+  <xacro:property name="proximal_link_mass" value="0.01"/>
+  <xacro:property name="distal_link_mass"   value="0.01"/>
+  <xacro:property name="proximal_pad_mass"  value="0.01"/>
+  <xacro:property name="distal_pad_mass"    value="0.01"/>
+  <xacro:property name="swivel_link_mass"   value="0.01"/>
+  <xacro:property name="lower_shell_mass"   value="0.74"/>
+  <xacro:property name="pad_mass"           value="0.1"/>
+  
+  <!-- ====================================== Link Macros ==================================== -->
+  
+  <xacro:macro name="flex_link" params="finger_id">
+    <link name="finger_${finger_id}_flex_link">
+      <visual>
+        <origin xyz="0.0005 0 -0.003" rpy="0 0 0" />
+        <geometry>
+	  <box size="0.017 0.014 0.0065"/>
+        </geometry>
+	<material name="gold">
+	  <color rgba="${254/255} ${216/255} ${93/255} 1"/>
+	</material>
+      </visual>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+	<mass value="${flex_link_mass}"/>
+	<xacro:cuboid_inertia m="${flex_link_mass}" x="0.005" y="0.014" z="0.015"/>
+      </inertial>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+  	<geometry>
+	  <box size="0.01 0.01 0.01"/>
+  	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+  
+  <xacro:macro name="proximal_link" params="finger_id">
+    <link name="proximal_${finger_id}">
+      <visual>
+	<origin xyz="-0.011 0.007 0.011" rpy="3.1459 0 0"/>
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal.STL" />
+	</geometry>
+	<material name="black"/>
+      </visual>
+      <inertial>
+	<origin xyz="-0.011 0.007 0.011" rpy="3.1459 0 0"/>
+	<mass value="${proximal_link_mass}"/>
+	<xacro:cuboid_inertia m="${proximal_link_mass}" x="0.02" y="0.15" z="0.071"/>
+      </inertial>
+      <collision>
+	<origin xyz="-0.011 0.007 0.011" rpy="3.1459 0 0"/>
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="distal_link" params="finger_id">
+    <link name="distal_${finger_id}">
+      <visual>
+	<origin xyz="-0.077 0.007 0.007" rpy="3.1459 0 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal.STL" />
+	</geometry>
+	<material name="black"/>
+      </visual>
+      <inertial>
+	<origin xyz="-0.077 0.007 0.007" rpy="3.1459 0 0" />
+	<mass value="${distal_link_mass}"/>
+	<xacro:cuboid_inertia m="${distal_link_mass}" x="0.017" y="0.15" z="0.039"/>
+      </inertial>
+      <collision>
+	<origin xyz="-0.077 0.007 0.007" rpy="3.1459 0 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="proximal_pad" params="finger_id">
+    <link name="proximal_pad_${finger_id}">
+      <visual>
+	<origin xyz="-0.008 0.014 -0.002" rpy="1.5708 1.5708 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal_pad.STL" />
+	</geometry>
+	<material name="dark_grey">
+	  <color rgba="0.2 0.2 0.2 1"/>
+	</material>
+      </visual>
+      <inertial>
+	<origin xyz="-0.008 0.014 -0.002" rpy="1.5708 1.5708 0" />
+	<mass value="${proximal_pad_mass}"/>
+	<xacro:cuboid_inertia m="${proximal_pad_mass}" x="0.005" y="0.15" z="0.071"/>
+      </inertial>
+      <collision>
+	<origin xyz="-0.008 0.014 -0.002" rpy="1.5708 1.5708 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/proximal_pad.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="distal_pad" params="finger_id">
+    <link name="distal_pad_${finger_id}">
+      <visual>
+	<origin
+            xyz="-0.00825 0.009 0.057"
+            rpy="1.5708 1.5708 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal_pad.STL" />
+	</geometry>
+	<material name="dark_grey">
+	  <color rgba="0.2 0.2 0.2 1"/>
+	</material>
+      </visual>
+      <inertial>
+	<origin xyz="-0.00825 0.009 0.057" rpy="1.5708 1.5708 0" />
+	<mass value="${distal_pad_mass}"/>
+	<xacro:cuboid_inertia m="${distal_pad_mass}" x="0.005" y="0.15" z="0.039"/>
+      </inertial>
+      <collision>
+	<origin xyz="-0.00825 0.009 0.057" rpy="1.5708 1.5708 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/distal_pad.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <xacro:macro name="swivel_link" params="finger_id">
+    <link name="swivel_${finger_id}">
+      <visual>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/reflex/swivel_${finger_id}.STL" />
+	</geometry>
+	<material name="black"/>
+      </visual>
+      <inertial>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<mass value="${swivel_link_mass}"/>
+	<xacro:cuboid_inertia m="${swivel_link_mass}" x="0.022" y="0.032" z="0.03"/>
+      </inertial>
+      <collision>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <mesh filename="package://ll4ma_robots_description/meshes/reflex/swivel_${finger_id}.STL" />
+	</geometry>
+      </collision>
+    </link>
+  </xacro:macro>
+
+  <!-- ===================================== Joint Macros ===================================== -->
+  
+  <xacro:macro name="distal_pad_joint" params="finger_id">
+    <joint name="dist${finger_id}_pad_joint" type="fixed">
+      <origin
+	  xyz="-0.01 0 0.001"
+	  rpy="1.5707963267949 0 -1.5707963267949" />
+      <parent link="distal_${finger_id}" />
+      <child link="distal_pad_${finger_id}" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+
+  <xacro:macro name="proximal_pad_joint" params="finger_id">
+    <joint name="prox${finger_id}_pad_joint" type="fixed">
+      <origin
+	  xyz="0 0 0"
+	  rpy="1.5707963267949 0 -1.5707963267949" />
+      <parent link="proximal_${finger_id}" />
+      <child link="proximal_pad_${finger_id}" />
+      <axis xyz="0 0 0" />
+    </joint>
+  </xacro:macro>
+  
+  <!-- =============================== Kinematic Chain =============================== -->
+  
+  <link name="lower_shell">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ll4ma_robots_description/meshes/reflex/base_link.STL" />
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${lower_shell_mass}"/>
+      <xacro:cuboid_inertia m="${lower_shell_mass}" x="0.066" y="0.091" z="0.136"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<mesh filename="package://ll4ma_robots_description/meshes/reflex/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  
+  <link name="pad">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://ll4ma_robots_description/meshes/reflex/pad.STL" />
+      </geometry>
+      <material name="dark_grey">
+	<color rgba="0.2 0.2 0.2 1"/>
+      </material>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${pad_mass}"/>
+      <xacro:cuboid_inertia m="${pad_mass}" x="0.066" y="0.091" z="0.136"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<mesh filename="package://ll4ma_robots_description/meshes/reflex/pad.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+
+  <xacro:swivel_link        finger_id="1"/>
+  <xacro:proximal_link      finger_id="1"/>
+  <xacro:proximal_pad       finger_id="1"/>
+  <xacro:flex_link          finger_id="1"/>
+  <xacro:distal_link        finger_id="1"/>
+  <xacro:distal_pad         finger_id="1"/>
+  
+  <xacro:swivel_link        finger_id="2"/>
+  <xacro:proximal_link      finger_id="2"/>
+  <xacro:proximal_pad       finger_id="2"/>
+  <xacro:flex_link          finger_id="2"/>
+  <xacro:distal_link        finger_id="2"/>
+  <xacro:distal_pad         finger_id="2"/>
+
+  <xacro:proximal_link      finger_id="3"/>
+  <xacro:proximal_pad       finger_id="3"/>
+  <xacro:flex_link          finger_id="3"/>
+  <xacro:distal_link        finger_id="3"/>  
+  <xacro:distal_pad         finger_id="3"/>
+
+  <xacro:proximal_pad_joint finger_id="1"/>
+  <xacro:distal_pad_joint   finger_id="1"/>
+  <xacro:proximal_pad_joint finger_id="2"/>
+  <xacro:distal_pad_joint   finger_id="2"/>
+  <xacro:proximal_pad_joint finger_id="3"/> 
+  <xacro:distal_pad_joint   finger_id="3"/>
+
+  
+  <joint name="pad_joint" type="fixed">
+    <origin
+	xyz="0.02 0 0.063"
+	rpy="1.5707963267949 5.55111512312578E-17 -1.5707963267949" />
+    <parent link="lower_shell" />
+    <child link="pad" />
+    <axis xyz="0 0 0" />
+  </joint>
+  
+  <joint name="preshape_1" type="${joint_type}">
+    <origin
+	xyz="0.0503973683071414 -0.026 0.063"
+	rpy="6.75550818663469E-16 1.97993848419069E-16 -2.77555756156289E-16" />
+    <parent link="lower_shell" />
+    <child link="swivel_1" />
+    <axis xyz="0 0 -1" />
+    <limit effort="15" lower="0.0" upper="${pi/2}" velocity="7"/>
+  </joint>
+  
+  <joint name="proximal_joint_1" type="${joint_type}">
+    <origin
+	xyz="0.01 0 0.0186"
+	rpy="-6.20039667432211E-16 0.28 2.22044604925031E-16" />
+    <parent link="swivel_1" />
+    <child link="proximal_1" />
+    <axis xyz="0 -1 0" />
+    <limit effort="15" lower="0.0" upper="${pi}" velocity="7"/>
+  </joint>
+
+  <joint name="proximal_to_flex_1" type="fixed">
+    <origin xyz="0.07 0 0.004" rpy="0 0 0"/>
+    <parent link="proximal_1"/>
+    <child link="finger_1_flex_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <joint name="flex_1_to_distal" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="finger_1_flex_link"/>
+    <child link="distal_1"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <joint name="proximal_to_flex_2" type="fixed">
+    <origin xyz="0.07 0 0.004" rpy="0 0 0"/>
+    <parent link="proximal_2"/>
+    <child link="finger_2_flex_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <joint name="flex_2_to_distal" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="finger_2_flex_link"/>
+    <child link="distal_2"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  
+  <joint name="proximal_to_flex_3" type="fixed">
+    <origin xyz="0.07 0 0.004" rpy="0 0 0"/>
+    <parent link="proximal_3"/>
+    <child link="finger_3_flex_link"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
+  <joint name="flex_3_to_distal" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="finger_3_flex_link"/>
+    <child link="distal_3"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  
+  <joint name="preshape_2" type="${joint_type}">
+    <origin
+	xyz="0.0503973683071413 0.0259999999999999 0.063"
+	rpy="1.22459340959228E-15 -7.33448407631817E-16 -1.66533453693773E-16" />
+    <parent link="lower_shell" />
+    <child link="swivel_2" />
+    <axis xyz="0 0 1" />
+    <limit effort="15" lower="0.0" upper="${pi/2}" velocity="7"/>
+  </joint>
+    
+  <joint name="proximal_joint_2" type="${joint_type}">
+    <origin
+	xyz="0.01 0 0.0186"
+	rpy="-1.16908225836102E-15 0.28 1.11022302462515E-16" />
+    <parent link="swivel_2" />
+    <child link="proximal_2" />
+    <axis xyz="0 -1 0" />
+    <limit effort="15" lower="0.0" upper="${pi}" velocity="7"/>
+  </joint>
+    
+  <joint name="proximal_joint_3" type="${joint_type}">
+    <origin
+	xyz="-0.0299999999999996 0 0.0816000000000002"
+	rpy="-5.55111512312578E-17 0.28 3.14159265358979" />
+    <parent link="lower_shell" />
+    <child link="proximal_3" />
+    <axis xyz="0 -1 0" />
+    <limit effort="15" lower="0.0" upper="${pi}" velocity="7"/>
+  </joint>  
+
+
+
+
+
+  
+  <!-- Leaving out tactile links/joints as they will not be visualized in Gazebo. They can be -->
+  <!-- added back in if they will actually be used for sensing in simulation.  -->
+  <!--
+  <joint name="base_tactile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="base_tactile" />
+  </joint>
+
+  <link name="base_tactile"/>
+
+  <link name="proximal_1_tactile" />
+
+  <joint name="proximal_1_tactile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="proximal_1" />
+    <child link="proximal_1_tactile" />
+  </joint>
+
+  <joint name="proximal_2_tactile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="proximal_2" />
+    <child link="proximal_2_tactile" />
+  </joint>
+
+  <link name="proximal_2_tactile"/>
+
+  <joint name="proximal_3_tactile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="proximal_3" />
+    <child link="proximal_3_tactile" />
+  </joint>
+
+  <link name="proximal_3_tactile"/>
+
+  <joint name="distal_1_tactile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="distal_1" />
+    <child link="distal_1_tactile" />
+  </joint>
+
+  <link name="distal_1_tactile"/>
+
+  <joint name="distal_2_tactile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="distal_2" />
+    <child link="distal_2_tactile" />
+  </joint>
+
+  <link name="distal_2_tactile"/>
+
+  <joint name="distal_3_tactile_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="distal_3" />
+    <child link="distal_3_tactile" />
+  </joint>
+
+  <link name="distal_3_tactile"/>
+  -->
+
+</robot>

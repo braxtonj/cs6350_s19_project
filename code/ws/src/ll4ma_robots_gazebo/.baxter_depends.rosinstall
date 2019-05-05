@@ -1,0 +1,4 @@
+- git:
+    uri: https://github.com/RethinkRobotics/baxter_common.git
+    local-name: baxter_common
+    version: master

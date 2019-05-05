@@ -1,0 +1,9 @@
+Header header
+geometry_msgs/Pose pose
+geometry_msgs/Twist twist
+geometry_msgs/Twist accel
+geometry_msgs/Wrench wrench
+float64[] null_posture
+float64[] constraints
+geometry_msgs/Pose constraint_frame
+bool desired_in_cf

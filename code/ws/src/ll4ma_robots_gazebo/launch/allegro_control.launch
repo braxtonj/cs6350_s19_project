@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- ================================================================================= -->
+  <!-- ARGUMENT OPTIONS                                                                  -->
+  <!-- ~~~~~~~~~~~~~~~~                                                                  -->
+  <!-- robot_name: Name of the robot, used for namespacing                               -->
+  <!-- hand_name: Name of the hand, used for namespacing                                 -->
+  <!-- controller: Type of controller to use [None, joint_pd]                            -->
+  <!-- control_rate: Frequency at which robot control commands are published             -->
+  <!--                                                                                   -->
+  <!-- jnt_state_topic: Topic name for publishing current joint states                   -->
+  <!-- jnt_des_topic: Topic name for publishing desired joint states                     -->
+  <!-- jnt_cmd_topic: Topic name for publishing low-level joint commands (torques)       -->
+  <!-- ================================================================================= -->
+  <arg name="robot_name"      default="lbr4"/>
+  <arg name="hand_name"       default="allegro"/>
+  <arg name="controller"      default="joint_pd"/>
+  <arg name="control_rate"    default="1000"/>
+
+  <arg name="jnt_state_topic" default="/allegro/joint_states"/>
+  <arg name="jnt_des_topic"   default="/allegro/joint_des_cmd"/>
+  <arg name="jnt_cmd_topic"   default="/allegro/joint_cmd"/>
+  <!-- ================================================================================= -->
+
+  
+  <!-- Controller manager for controllers in ll4ma_robot_control -->
+  <node name="allegro_ll4ma_controller_manager" pkg="ll4ma_robots_gazebo"
+	type="gazebo_control_manager" args="allegro $(arg hand_name)"
+	respawn="false" output="screen"/>
+
+  
+  <!-- Load controller configurations to param server -->
+  <rosparam file="$(find ll4ma_robots_gazebo)/config/control/allegro/allegro_effort_control.yaml"
+	    command="load" ns="$(arg robot_name)"/>
+  <rosparam file="$(find ll4ma_robot_interface)/config/allegro_joint_pd_control.yaml"
+	    command="load" ns="$(arg hand_name)"/>
+
+  
+  <!-- Load parameters to ROS parameter server -->
+  <group ns="$(arg hand_name)">
+    <param name="control_type"       type="str"  value="$(arg controller)"/>
+    <param name="compensate_gravity" type="bool" value="true"/>
+    <param name="jnt_state_topic"    type="str"  value="$(arg jnt_state_topic)"/>
+    <param name="jnt_des_topic"      type="str"  value="$(arg jnt_des_topic)"/>
+    <param name="jnt_cmd_topic"      type="str"  value="$(arg jnt_cmd_topic)"/>
+    <param name="rate"               type="int"  value="$(arg control_rate)"/>
+  </group>
+
+
+  <!-- Load ROS controllers -->
+  <node name="allegro_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" ns="$(arg robot_name)" args="index_joint_0_effort_controller
+						     index_joint_1_effort_controller
+						     index_joint_2_effort_controller
+						     index_joint_3_effort_controller
+						     middle_joint_0_effort_controller
+						     middle_joint_1_effort_controller
+						     middle_joint_2_effort_controller
+						     middle_joint_3_effort_controller
+						     ring_joint_0_effort_controller
+						     ring_joint_1_effort_controller
+						     ring_joint_2_effort_controller
+						     ring_joint_3_effort_controller
+						     thumb_joint_0_effort_controller
+						     thumb_joint_1_effort_controller
+						     thumb_joint_2_effort_controller
+						     thumb_joint_3_effort_controller"/>
+
+  
+  <!-- Split joint commands to publish to individual joint effort controllers -->
+  <node name="allegro_joint_wrapper" pkg="ll4ma_robots_gazebo" type="robot_joint_wrapper"
+	respawn="false" output="screen">
+    <param name="listen_prefix"  type="str" value="$(arg hand_name)"/>
+    <param name="publish_prefix" type="str" value="$(arg robot_name)"/>
+    <param name="control_method" type="str" value="e"/>
+    <param name="jnt_cmd_topic"  type="str" value="$(arg jnt_cmd_topic)"/>
+  </node>
+    
+</launch>

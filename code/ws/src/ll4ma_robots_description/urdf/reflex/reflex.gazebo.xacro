@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <!-- Transmissions -->
+  <xacro:if value="$(arg actuate_reflex)">
+    <xacro:include filename="$(find ll4ma_robots_description)/urdf/reflex/reflex.transmission.xacro"/>
+  </xacro:if>
+
+  <!-- materials -->
+  <gazebo reference="lower_shell">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="pad">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="swivel_1">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="swivel_2">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="swivel_3">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="distal_1">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="distal_2">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="distal_3">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="distal_pad_1">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="distal_pad_2">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="distal_pad_3">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="proximal_1">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="proximal_2">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="proximal_3">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="proximal_pad_1">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="proximal_pad_2">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="proximal_pad_3">
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <gazebo reference="finger_1_flex_link">
+    <material>Gazebo/YellowTransparent</material>
+  </gazebo>
+  <gazebo reference="finger_2_flex_link">
+    <material>Gazebo/YellowTransparent</material>
+  </gazebo>
+  <gazebo reference="finger_3_flex_link">
+    <material>Gazebo/YellowTransparent</material>
+  </gazebo>
+  
+</robot>

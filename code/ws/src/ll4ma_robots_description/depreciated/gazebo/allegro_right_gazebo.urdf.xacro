@@ -1,0 +1,184 @@
+<?xml version="1.0"?>
+<robot>
+
+
+  <transmission name="allegro_hand_right_j0">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="index_joint_0">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor0">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+<transmission name="allegro_hand_right_j1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="index_joint_1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="allegro_hand_right_trans2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="index_joint_2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="allegro_hand_right_trans3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="index_joint_3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+   <transmission name="allegro_hand_right_trans4">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="middle_joint_0">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor4">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+   <transmission name="allegro_hand_right_trans5">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="middle_joint_1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor5">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+   <transmission name="allegro_hand_right_trans6">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="middle_joint_2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor6">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+   <transmission name="allegro_hand_right_trans7">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="middle_joint_3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor7">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+   
+   <transmission name="allegro_hand_right_trans8">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ring_joint_0">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor8">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+   <transmission name="allegro_hand_right_trans9">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ring_joint_1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor9">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+   <transmission name="allegro_hand_right_trans10">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ring_joint_2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor10">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+
+   <transmission name="allegro_hand_right_trans11">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="ring_joint_3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor11">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+   <transmission name="allegro_hand_right_trans12">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="thumb_joint_0">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor12">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+   <transmission name="allegro_hand_right_trans13">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="thumb_joint_1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor13">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+   <transmission name="allegro_hand_right_trans14">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="thumb_joint_2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor14">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+   <transmission name="allegro_hand_right_trans15">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="thumb_joint_3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="allegro_hand_right_motor15">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
+</robot>

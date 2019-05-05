@@ -1,0 +1,5 @@
+bool go_home
+geometry_msgs/Pose palm_goal_pose_world
+---
+bool success
+trajectory_msgs/JointTrajectory plan_traj

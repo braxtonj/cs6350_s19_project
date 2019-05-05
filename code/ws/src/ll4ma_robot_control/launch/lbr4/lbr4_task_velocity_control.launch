@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="robot_name"            default="lbr4"/>
+  <arg name="joint_des_topic"       default="/$(arg robot_name)/joint_des_cmd"/>
+  <arg name="task_des_topic"        default="/$(arg robot_name)/task_des_cmd"/>
+
+  <group ns="$(arg robot_name)">
+    <param name="joint_des_topic" type="str" value="$(arg joint_des_topic)"/>
+    <param name="task_des_topic" type="str" value="$(arg task_des_topic)"/>
+  </group>
+
+  <node name="lbr4_task_velocity_controller" pkg="ll4ma_robot_control" type="lbr4_task_velocity_controller" respawn="false" output="screen"/>
+
+</launch>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- ================================================================================= -->
+  <!-- ARGUMENT OPTIONS                                                                  -->
+  <!-- ~~~~~~~~~~~~~~~~                                                                  -->
+  <!-- robot_name: Name of the robot, used for namespacing                               -->
+  <!-- hand_name: Name of the hand, used for namespacing                                 -->
+  <!-- controller: Type of controller to use [None, joint_pd]                            -->
+  <!-- control_rate: Frequency at which robot control commands are published             -->
+  <!--                                                                                   -->
+  <!-- jnt_state_topic: Topic name for publishing current joint states                   -->
+  <!-- jnt_des_topic: Topic name for publishing desired joint states                     -->
+  <!-- jnt_cmd_topic: Topic name for publishing low-level joint commands (torques)       -->
+  <!-- ================================================================================= -->
+  <arg name="robot_name"      default="lbr4"/>
+  <arg name="hand_name"       default="reflex"/>
+  <arg name="controller"      default="joint_pd"/>
+  <arg name="control_rate"    default="1000"/>
+  
+  <arg name="jnt_state_topic" default="/reflex/joint_states"/>
+  <arg name="jnt_des_topic"   default="/reflex/joint_des_cmd"/>
+  <arg name="jnt_cmd_topic"   default="/reflex/joint_cmd"/>
+  <!-- ================================================================================= -->
+
+  
+  <!-- Controller manager for controllers in ll4ma_robot_control -->
+  <node name="reflex_ll4ma_controller_manager" pkg="ll4ma_robots_gazebo"
+	type="gazebo_control_manager" args="reflex $(arg hand_name)"
+	respawn="false" output="screen"/>
+
+  
+  <!-- Load controller configurations to param server -->
+  <rosparam file="$(find ll4ma_robots_gazebo)/config/control/reflex/reflex_effort_control.yaml"
+	    command="load" ns="$(arg robot_name)"/>
+  <rosparam file="$(find ll4ma_robot_interface)/config/reflex_joint_pd_control.yaml"
+  	    command="load"/>
+  
+  
+  <!-- Load parameters to ROS parameter server -->
+  <group ns="reflex">
+    <param name="control_type"       type="str"  value="$(arg controller)"/>
+    <param name="compensate_gravity" type="bool" value="true"/>
+    <param name="jnt_state_topic"    type="str"  value="$(arg jnt_state_topic)"/>
+    <param name="jnt_des_topic"      type="str"  value="$(arg jnt_des_topic)"/>
+    <param name="jnt_cmd_topic"      type="str"  value="$(arg jnt_cmd_topic)"/>
+    <param name="rate"               type="int"  value="$(arg control_rate)"/>
+  </group>
+
+
+  <!-- Load ROS controllers -->
+  <node name="reflex_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+  	output="screen" ns="$(arg robot_name)" args="preshape_1_effort_controller
+  						     preshape_2_effort_controller
+  						     proximal_joint_1_effort_controller
+  						     proximal_joint_2_effort_controller
+  						     proximal_joint_3_effort_controller"/>
+
+  
+  <!-- Split joint commands to publish to individual joint effort controllers -->
+  <node name="reflex_joint_wrapper" pkg="ll4ma_robots_gazebo" type="robot_joint_wrapper"
+  	respawn="false" output="screen">
+    <param name="listen_prefix"  type="str" value="reflex"/>
+    <param name="publish_prefix" type="str" value="$(arg robot_name)"/>
+    <param name="control_method" type="str" value="e"/>
+  </node>
+    
+</launch>

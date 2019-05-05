@@ -1,0 +1,6 @@
+string name
+bool is_joint_space
+---
+bool success
+trajectory_msgs/JointTrajectory joint_trajectory
+TaskTrajectory task_trajectory

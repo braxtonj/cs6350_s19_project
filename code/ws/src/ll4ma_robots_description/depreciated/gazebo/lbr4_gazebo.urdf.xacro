@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<robot>
+
+
+  <transmission name="lbr4_trans0">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lbr4_j0">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="lbr4_motor0">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+<transmission name="lbr4_trans1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lbr4_j1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="lbr4_motor1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="lbr4_trans2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lbr4_j2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="lbr4_motor2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="lbr4_trans3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lbr4_j3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="lbr4_motor3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="lbr4_trans4">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lbr4_j4">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="lbr4_motor4">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="lbr4_trans5">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lbr4_j5">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="lbr4_motor5">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="lbr4_trans6">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="lbr4_j6">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="lbr4_motor6">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+ 
+</robot>

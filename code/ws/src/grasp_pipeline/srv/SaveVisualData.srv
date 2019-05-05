@@ -1,0 +1,21 @@
+int64 object_id
+sensor_msgs/PointCloud2 scene_cloud
+sensor_msgs/PointCloud2 scene_sd_cloud
+string scene_cloud_save_path
+string scene_sd_cloud_save_path
+string sd_cloud_depth_image_save_path
+string sd_cloud_rgb_image_save_path
+string sd_cloud_normal_save_path
+string cloud_normal_save_path
+sensor_msgs/Image scene_depth_img
+sensor_msgs/Image scene_rgb_img
+sensor_msgs/Image scene_sd_depth_img
+sensor_msgs/Image scene_sd_rgb_img
+string rgb_image_save_path
+string depth_image_save_path
+string sd_rgb_image_save_path
+string sd_depth_image_save_path
+---
+bool save_visual_data_success
+sensor_msgs/PointCloud2 scene_sd_cloud_normal
+sensor_msgs/PointCloud2 scene_cloud_normal

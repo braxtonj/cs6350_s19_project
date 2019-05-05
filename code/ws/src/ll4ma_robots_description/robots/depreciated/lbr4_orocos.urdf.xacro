@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro"
+       name="lbr4" >
+
+  <xacro:property name="M_PI" value="3.1415926535897931" />
+  <xacro:property name="damping_factor" value="0.1"/>
+  <xacro:property name="friction_factor" value="1.0"/>
+          <xacro:property name="M_PI" value="3.1415926535897931" />
+	<xacro:property name="velocity_scale" value="1.0"/>
+	<xacro:property name="effort_scale" value="10.0"/>
+	
+	<xacro:property name="M_PI" value="3.1415926535897931" />
+
+	<xacro:property name="damping_factor" value="0.1"/>
+
+	<xacro:property name="d0" value="${damping_factor*2.0}"/>
+	<xacro:property name="d1" value="${damping_factor*1.8}"/>
+	<xacro:property name="d2" value="${damping_factor*1.0}"/>
+	<xacro:property name="d3" value="${damping_factor*1.5}"/>
+	<xacro:property name="d4" value="${damping_factor*1.2}"/>
+	<xacro:property name="d5" value="${damping_factor*1.0}"/>
+	<xacro:property name="d6" value="${damping_factor*1.0}"/>
+
+	<xacro:property name="friction_factor" value="1.0"/>
+	
+	<xacro:property name="f0" value="${friction_factor*1.0}"/>
+	<xacro:property name="f1" value="${friction_factor*1.0}"/>
+	<xacro:property name="f2" value="${friction_factor*1.0}"/>
+	<xacro:property name="f3" value="${friction_factor*1.0}"/>
+	<xacro:property name="f4" value="${friction_factor*0.4}"/>
+	<xacro:property name="f5" value="${friction_factor*0.1}"/>
+	<xacro:property name="f6" value="${friction_factor*0.1}"/>
+
+  <xacro:arg name="load_base" default="true"/>
+  <xacro:arg name="robot_name" default="lbr4"/>
+
+  <!-- lwr-->
+  <xacro:include filename="$(find ll4ma_robots_description)/urdf/lbr4/lbr4_orocos.urdf.xacro" />
+  <!-- generic simulator_gazebo plugins -->
+  <!--xacro:include filename="$(find ll4ma_robots_description)/gazebo/lbr4_orocos.gazebo.urdf.xacro"/-->
+  <!--xacro:include filename="$(find lwr_description)/urdf/lwr.transmission.xacro"/-->
+
+
+  <!-- materials for visualization -->
+  <xacro:include filename="$(find ll4ma_robots_description)/urdf/lbr4/materials.urdf.xacro" />
+
+  <!-- world + base link-->
+  <link name="world"/>
+  <link name="base_link"/>
+
+  <joint name="base_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 ${2*M_PI/3}" />
+    <parent link="world" />
+    <child link="base_link" />
+  </joint>
+
+
+  <!--lbr4-->
+  <xacro:lbr4 name="lbr4" parent="base_link">
+    <!-- Position from origin -->
+    <origin xyz="0 0 0.0" rpy="0 0 0" />
+  </xacro:lbr4>
+
+   <xacro:lwr_gazebo/>
+   <xacro:lwr_transmission/>
+
+
+</robot>

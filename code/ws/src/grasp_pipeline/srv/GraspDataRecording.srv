@@ -1,0 +1,25 @@
+int64 batch_id 
+int64 object_id
+int64 grasp_id
+string object_name
+float64 time_stamp
+geometry_msgs/PoseStamped preshape_palm_pose
+sensor_msgs/JointState preshape_allegro_joint_state
+bool top_grasp
+string grasp_type
+string grasp_control_type
+float64 inf_suc_prob 
+float64 init_suc_prob 
+float64[] inits_suc_prob_list
+int64 max_init_idx
+geometry_msgs/PoseStamped preshape_palm_world_pose
+geometry_msgs/PoseStamped object_pose
+int32 grasp_success_label
+geometry_msgs/PoseStamped true_preshape_palm_world_pose
+geometry_msgs/PoseStamped true_preshape_palm_pcd_pose
+sensor_msgs/JointState true_preshape_joint_state
+sensor_msgs/JointState close_shape_allegro_joint_state
+geometry_msgs/PoseStamped close_shape_palm_world_pose
+geometry_msgs/PoseStamped close_shape_palm_pcd_pose
+---
+bool save_h5_success

@@ -1,0 +1,25 @@
+<launch>
+    <arg name="simulation" value="false"/>
+    <arg name="use_hd_arg" value="true"/>
+    <arg name="smooth_plan_traj_arg" value="true"/>
+    <arg name="record_data_path" value="/dataspace/data_kai/al_grasp_queries/"/>
+    <!--arg name="record_data_path" value="/dataspace/data_kai/multi_finger_exp_data/"/-->
+    <!--<arg name="save_visual_data_path" value="$(arg record_data_path)"/>-->
+    <!--arg name="record_data_path" value="/mnt/tars_data/multi_finger_exp_data/"/-->
+    <arg name="go_home" default="false"/>
+
+    <!-- <include file="$(find urlg_robots_gazebo)/launch/lbr4_allegro_control_position.launch" /> -->
+
+    <node name="data_collection_client_node" pkg="grasp_pipeline" type="grasp_client.py" output="screen">
+      <param name="use_sim" value="true" type="bool" if="$(arg simulation)"/>
+      <param name="use_sim" value="false" type="bool" unless="$(arg simulation)"/>
+      <param name="num_grasps_per_object" value="10" type="int"/>
+      <param name="data_recording_path" value="$(arg record_data_path)" type="string"/>
+      <param name="save_visual_data_pre_path" value="$(arg record_data_path)" type="string"/>
+      <param name="use_hd" value="$(arg use_hd_arg)" type="bool"/>
+      <param name="smooth_plan_traj" value="$(arg smooth_plan_traj_arg)" type="bool"/>
+      <param name="move_robot_home" value="$(arg go_home)" type="bool"/>
+      <param name="empty_exp_folder_path" value="/dataspace/data_kai/multi_finger_exp_data_empty" type="string"/>
+    </node>
+
+</launch>

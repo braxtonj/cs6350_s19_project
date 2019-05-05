@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- ================================================================================= -->
+  <arg name="config_path"     default="$(find ll4ma_robots_gazebo)/config/control/lbr4"/>
+  <arg name="config_filename" default="lbr4_pd_control.yaml"/>
+  <!-- ================================================================================= -->
+  
+
+  <!-- Load the parameters to the ROS parameter server -->
+  <rosparam file="$(arg config_path)/$(arg config_filename)" command="load"/>
+
+
+  <!-- Parameter reload node -->
+  <node name="reload_parameters" pkg="ll4ma_robots_gazebo" type="reload_parameters.py"
+  	respawn="false" output="screen"/>
+  
+</launch>

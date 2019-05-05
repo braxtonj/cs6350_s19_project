@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="robot_name"            default="lbr4"/>
+  <arg name="jnt_state_topic"       default="/$(arg robot_name)/joint_states"/>
+  <arg name="jnt_cmd_topic"         default="/$(arg robot_name)/joint_cmd"/>
+  <rosparam file="$(find ll4ma_robot_interface)/config/lbr4_robot.yaml" command="load"/>
+
+  <group ns="$(arg robot_name)">
+    <param name="jnt_cmd_topic" type="str" value="$(arg jnt_cmd_topic)"/>
+    <param name="jnt_state_topic" type="str" value="$(arg jnt_state_topic)"/>
+  </group>
+
+</launch>

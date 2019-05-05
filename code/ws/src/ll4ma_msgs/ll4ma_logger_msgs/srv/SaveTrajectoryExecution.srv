@@ -1,0 +1,5 @@
+bool execution_success    # indicates success or failure of execution
+string trajectory_name    # trajectory name to save to (if you want a specific name)
+---
+string trajectory_name    # name the trajectory data was saved to
+bool success

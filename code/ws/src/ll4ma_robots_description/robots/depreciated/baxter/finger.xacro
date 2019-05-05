@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="finger">
+
+  <!-- standard narrow properties -->
+  <xacro:property name="standard_narrow_properties">
+    <xacro:property name="finger_length" value="0.075" />
+    <xacro:property name="finger_width" value="0.01725" />
+    <xacro:property name="finger_box_height" value="0.01" />
+    <xacro:property name="finger_box_width" value="0.0135" />
+    <xacro:property name="finger_box_length" value="0.04" />
+    <xacro:property name="knuckle_box_height" value="0.01" />
+    <xacro:property name="knuckle_box_width" value="0.017" />
+    <xacro:property name="knuckle_box_length" value="0.05" />
+    <xacro:property name="collision_origin_y_coef" value="-0.003" />
+  </xacro:property>
+
+  <!-- extended narrow properties -->
+  <xacro:property name="extended_narrow_properties">
+    <xacro:property name="finger_length" value="0.1127" />
+    <xacro:property name="finger_width" value="0.01725" />
+    <xacro:property name="finger_box_height" value="0.01" />
+    <xacro:property name="finger_box_width" value="0.0135" />
+    <xacro:property name="finger_box_length" value="0.0615" />
+    <xacro:property name="knuckle_box_height" value="0.01" />
+    <xacro:property name="knuckle_box_width" value="0.017" />
+    <xacro:property name="knuckle_box_length" value="0.05" />
+    <xacro:property name="collision_origin_y_coef" value="-0.003" />
+  </xacro:property>
+
+  <!-- standard wide properties -->
+  <xacro:property name="standard_wide_properties">
+    <xacro:property name="finger_length" value="0.075" />
+    <xacro:property name="finger_width" value="0.05503" />
+    <xacro:property name="finger_box_height" value="0.01" />
+    <xacro:property name="finger_box_width" value="0.0135" />
+    <xacro:property name="finger_box_length" value="0.04" />
+    <xacro:property name="knuckle_box_height" value="0.01" />
+    <xacro:property name="knuckle_box_width" value="0.017" />
+    <xacro:property name="knuckle_box_length" value="0.08778" />
+    <xacro:property name="collision_origin_y_coef" value="0.016" />
+  </xacro:property>
+
+  <!-- extended wide properties -->
+  <xacro:property name="extended_wide_properties">
+    <xacro:property name="finger_length" value="0.1127" />
+    <xacro:property name="finger_width" value="0.05503" />
+    <xacro:property name="finger_box_height" value="0.01" />
+    <xacro:property name="finger_box_width" value="0.0135" />
+    <xacro:property name="finger_box_length" value="0.0615" />
+    <xacro:property name="knuckle_box_height" value="0.01" />
+    <xacro:property name="knuckle_box_width" value="0.017" />
+    <xacro:property name="knuckle_box_length" value="0.08778" />
+    <xacro:property name="collision_origin_y_coef" value="0.016" />
+  </xacro:property>
+  
+  <!-- finger tip collision geometries -->
+  <xacro:property name="hard_tip_collision_geometry">
+    <box size="0.016 0.0065 0.037"/>
+  </xacro:property>
+  <xacro:property name="soft_tip_collision_geometry">
+    <box size="0.016 0.007 0.037"/>
+  </xacro:property>
+  <xacro:property name="half_round_tip_collision_geometry">
+    <cylinder length="0.037" radius="0.008"/>
+  </xacro:property>
+  <xacro:property name="paddle_tip_collision_geometry">
+    <box size="0.042 0.0065 0.037"/>
+  </xacro:property>
+  
+  <!-- finger macro -->
+  <xacro:macro name="finger" params="gripper_side finger_side finger_type tip_type reflect">
+    <!-- resolve properties based on finger type -->
+    <xacro:if value="${finger_type == 'standard_narrow'}">
+      <xacro:insert_block name="standard_narrow_properties"/>
+    </xacro:if>
+    <xacro:if value="${finger_type == 'standard_wide'}">
+      <xacro:insert_block name="standard_wide_properties"/>
+    </xacro:if>
+    <xacro:if value="${finger_type == 'extended_narrow'}">
+      <xacro:insert_block name="extended_narrow_properties"/>
+    </xacro:if>
+    <xacro:if value="${finger_type == 'extended_wide'}">
+      <xacro:insert_block name="extended_wide_properties"/>
+    </xacro:if>
+    
+    <link name="${gripper_side}_gripper_${finger_side}_finger">
+      <visual>
+        <origin rpy="0 0 ${-pi/2*(reflect+1)}" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/baxter/grippers/fingers/${finger_type}.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="0 0 ${-pi/2*(reflect+1)}" xyz="0 ${finger_width*reflect} ${finger_box_length}"/>
+        <geometry>
+          <box size="${finger_box_height} ${finger_box_width} ${finger_length}"/>
+        </geometry>
+      </collision>
+      <collision>
+        <origin rpy="0 0 ${-pi/2*(reflect+1)}" xyz="${reflect*-0.005} ${collision_origin_y_coef*reflect} 0.0083"/>
+        <geometry>
+          <box size="${knuckle_box_height} ${knuckle_box_length} ${knuckle_box_width}"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 ${-pi/2*(reflect+1)}" xyz="0 0 0"/>
+        <mass value="0.02"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <!-- add tip of specified type to finger -->
+    <xacro:finger_tip
+   	tip_type="${tip_type}"
+    	parent_link="${gripper_side}_gripper_${finger_side}_finger"
+    	reflect="${reflect}">
+      <origin rpy="0 0 0" xyz="0.0 ${reflect*finger_width} ${finger_length}"/>
+    </xacro:finger_tip>
+
+    <gazebo reference="${gripper_side}_gripper_${finger_side}_finger">
+      <mu1>1000</mu1>
+      <mu2>1000</mu2>
+      <fdir1>0.0 0.0 1.0</fdir1>
+      <kp>1e5</kp>
+      <kd>1.0</kd>
+    </gazebo>
+
+  </xacro:macro>
+
+  <!-- finger tip macro -->
+  <xacro:macro name="finger_tip" params="tip_type parent_link reflect *joint_origin">
+    <link name="${parent_link}_tip">
+      <visual>
+        <origin rpy="0 0 ${pi*(reflect+1)/2}" xyz="0 0 0"/>
+        <geometry>
+          <mesh filename="package://ll4ma_robots_description/meshes/baxter/grippers/finger_tips/${tip_type}_tip.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin rpy="0 0 ${pi*(reflect+1)/2}" xyz="0 ${-0.0045*reflect} -0.015"/>
+        <geometry>
+          <xacro:if value="${tip_type == 'hard'}">
+            <xacro:insert_block name="hard_tip_collision_geometry" />
+          </xacro:if>
+          <xacro:if value="${tip_type == 'soft'}">
+            <xacro:insert_block name="soft_tip_collision_geometry" />
+          </xacro:if>
+          <xacro:if value="${tip_type == 'half_round'}">
+            <xacro:insert_block name="half_round_tip_collision_geometry" />
+          </xacro:if>
+          <xacro:if value="${tip_type == 'paddle'}">
+            <xacro:insert_block name="paddle_tip_collision_geometry" />
+          </xacro:if>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="0 0 ${pi*(reflect+1)/2}" xyz="0 0 0"/>
+        <mass value="0.01"/>
+        <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+      </inertial>
+    </link>
+
+    <joint name="${parent_link}_tip_joint" type="fixed">
+      <xacro:insert_block name="joint_origin" />
+      <parent link="${parent_link}"/>
+      <child link="${parent_link}_tip"/>
+    </joint>
+
+  </xacro:macro>
+  
+</robot>

@@ -1,0 +1,36 @@
+lbr4:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100  
+  
+  # Velocity Controllers needs to be tuned ---------------------------------------
+  joint0_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lbr4_j0
+    pid: {p: 100.0, i: 0.0, d: 0.0}
+  joint1_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lbr4_j1
+    pid: {p: 100.0, i: 0.0, d: 0.010}
+  joint2_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lbr4_j2
+    pid: {p: 100.0, i: 0.0, d: 0.010}
+  joint3_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lbr4_j3
+    pid: {p: 100.0, i: 0.0, d: 0.010}
+  joint4_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lbr4_j4
+    pid: {p: 100.0, i: 0.0, d: 0.010}
+  joint5_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lbr4_j5
+    pid: {p: 50.0, i: 0.0, d: 0.010}
+  joint6_velocity_controller:
+    type: effort_controllers/JointVelocityController
+    joint: lbr4_j6
+    pid: {p: 50.0, i: 0.0, d: 0.010}
+  

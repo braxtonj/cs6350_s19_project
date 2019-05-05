@@ -1,0 +1,43 @@
+x_p_gains:
+  - 100.0  # x translation
+  - 100.0  # y translation
+  - 100.0  # z translation
+  - 100.0  # x rotation
+  - 100.0  # y rotation
+  - 100.0  # z rotation
+
+x_d_gains:
+  - 10.0  # x translation
+  - 10.0  # y translation
+  - 10.0  # z translation
+  - 10.0  # x rotation
+  - 10.0  # y rotation
+  - 10.0  # z rotation
+  
+null_p_gains:
+  - 0.0  # joint_0
+  - 0.0  # joint_1
+  - 0.0  # joint_2
+  - 0.0  # joint_3
+  - 0.0  # joint_4
+  - 0.0  # joint_5
+  - 0.0  # joint_6
+
+null_d_gains:
+  - 0.0  # joint_0
+  - 0.0  # joint_1
+  - 0.0  # joint_2
+  - 0.0  # joint_3
+  - 0.0  # joint_4
+  - 0.0  # joint_5
+  - 0.0  # joint_6
+
+torque_limits:
+  - 140.0 # A1 (J1) max: 176
+  - 140.0 # A2 (J2) max: 176
+  - 80.0  # E1 (J3) max: 100
+  - 80.0  # A3 (J4) max: 100
+  - 80.0  # A4 (J5) max: 100
+  - 30.0  # A5 (J6) max: 38
+  - 30.0  # A6 (J7) max: 38
+

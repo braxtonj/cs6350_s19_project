@@ -1,0 +1,72 @@
+#allegro_hand_right:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 100  
+  
+  # Position Controllers needs to be tuned ---------------------------------------
+  index_joint_0_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: index_joint_0
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  index_joint_1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: index_joint_1
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  index_joint_2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: index_joint_2
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  index_joint_3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: index_joint_3
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  middle_joint_0_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: middle_joint_0
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  middle_joint_1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: middle_joint_1
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  middle_joint_2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: middle_joint_2
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  middle_joint_3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: middle_joint_3
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  ring_joint_0_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: ring_joint_0
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  ring_joint_1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: ring_joint_1
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  ring_joint_2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: ring_joint_2
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  ring_joint_3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: ring_joint_3
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  thumb_joint_0_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: thumb_joint_0
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  thumb_joint_1_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: thumb_joint_1
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  thumb_joint_2_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: thumb_joint_2
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  thumb_joint_3_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: thumb_joint_3
+    pid: {p: 200.0, i: 0.0, d: 0.010}
+  
